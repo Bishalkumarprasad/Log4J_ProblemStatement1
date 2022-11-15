@@ -1,0 +1,101 @@
+﻿Introduction:
+
+
+Log4j is a building block that is used in the creation of modern software. Log4j is used by developers to keep track of what happens in their software applications or online services. It’s basically a huge journal of the activity of a system or application. This methodology is  ‘logging’ and it’s used by developers to keep an eye out for problems for users.
+The vulnerability allows hackers to remotely inject arbitrary code into a target network and assume complete control of it. To understand the cyberattack sequence, it’s important to first understand how loggers operate.Without a logger library like Log4j, information from servers is instantly archived after collection.But if logged data is actively analysed, or if certain actions in response to specific log data are required, Java software developers may use a library like Log4j to parse logs before they’re archived.Any business that uses a vulnerable Log4j library to parse log data in their backend systems is vulnerable to a Log4j cyberattack.This logger is capable of executing code based on input, and because the vulnerability allows attackers to manipulate input data, the logger could be forced to execute malicious code.
+The vulnerable Log4j library, when passed a specially crafted string, will call out to an LDAP server, download the code hosted in the LDAP directory, and then execute that code.  This allows cybercriminals to create a malicious LDAP server that stores code designed to take-over any server where it is executed, and then send applications/databases/APIs the string that points to their code.
+All versions of Log4j prior to version 2.17.0 are potentially impacted by the Log4j exploit. Every entity that uses Log 4j must immediately upgrade to the latest Apache library version - 2.17.1.
+
+
+Methodology:
+Reconnaissance :
+Shodan is a search engine for Internet-connected devices. Google lets you search for websites, Shodan lets you search for devices. This library provides developers easy access to all of the data stored in Shodan in order to automate tasks and integrate into existing tools.
+Scanning & Analysis:
+An open detection and scanning tool for discovering and fuzzing for Log4J RCE CVE-2021-44228 vulnerability.It can be used to test for WAF bypasses that can result in achieving code execution on the environment.
+
+
+
+
+
+
+Features:
+Support for lists of URLs.
+Fuzzing for more than 60 HTTP request headers, HTTP POST
+Data parameters, JSON data parameters.
+Supports DNS callback for vulnerability discovery and validation.
+WAF Bypass payloads.
+
+
+Tools Used:
+Requirement: 
+Python 3
+Linux Based Operating System.
+* Using Shodan we will search for servers with possibilities of having Log4j vulnerability.
+Link: https://github.com/achillean/shodan-python
+* A fully automated, accurate, and extensive scanner for finding vulnerable log4j hosts.
+Link: https://github.com/fullhunt/log4j-scan
+* This tool recursively scans the root-folder and all archive files in it, looking for probable log4j configuration files (xml, yml, properties,json), in each looking for configuration options which may enable an attacker to exploit CVE-2021-45046..
+Link:https://github.com/jfrog/log4j-tools
+
+
+
+
+
+
+
+
+
+
+
+
+Pathway:
+1.The following command outputs the IP address, port and organisation in CSV format for the previously downloaded data:
+$ shodan parse --fields ip_str,port,org --separator , *-data.json.gz
+2.The Following command print out their IP, port, organisation and hostnames use the following command:
+$ shodan search --fields ip_str,port,org,hostnames
+Fullhunt: Log4j-Scan
+3.Scan a list of URLs
+
+
+$ python3 log4j-scan.py -l *.txt
+4.Discover WAF bypasses against the environment.
+$ python3 log4j-scan.py -u “url” --waf-bypass
+5.Scan a Single URL using all Request Methods: GET, POST (url-encoded form), POST (JSON body)
+
+
+$ python3 log4j-scan.py -u https://log4j.lab.secbot.local --run-all-tests
+
+
+6.Shortlisting Detection:
+$python3 log4j-scan.py -l *.txt
+--test-CVE-2021-45046
+          Test using payloads for CVE-2021-45046 (detection payloads).
+          --test-CVE-2022-42889
+          Test using payloads for Apache Commons Text RCE (CVE-2022-42889).
+
+
+
+
+
+
+
+
+
+
+jfrog:Log4j-tools (Testing on System):
+Default Command:
+$ python scan_log4j_calls_jar.py root-folder
+
+
+will recursively scan all .jar files in root-folder, for each printing out locations (class name and method name) of calls to info/warn/error/log/debug /trace/fatal methods of log4j2.Logger.
+
+
+* The tool will scan root_folder recursively for .jar and .war files; in each located file the tool looks for a *log4j/core/net/JndiManager.class and *log4j/core/lookup/JndiLookup.class (recursively in each .jar file). If at least one of the classes is found, the tool attempts to fingerprint its version (including some variations found in patches and backport patches) in order to report whether the code is vulnerable.
+For Detailed analysis visit git repository.
+
+
+
+
+Conclusion:
+The Log4j vulnerabilities expose organisations to risk which can be found in other open source and proprietary code components that are embedded in applications. A key challenge is knowing what's at risk and then figuring out how to mitigate the risk.These are some of the methodologies used to identify the vulnerability and risks that came with it.
+One can know more about the Risks to the system using the above tools and find a mitigation or patching.
