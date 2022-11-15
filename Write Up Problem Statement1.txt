@@ -59,7 +59,7 @@ Fullhunt: Log4j-Scan
 
 $ python3 log4j-scan.py -l *.txt
 # Search Shodan
-results = api.search('apache','jndi:ldap')
+results = api.search('jndi:ldap')
 # Show the results
 print 'Results found: %s' % results['total']
 for result in results['matches']:
